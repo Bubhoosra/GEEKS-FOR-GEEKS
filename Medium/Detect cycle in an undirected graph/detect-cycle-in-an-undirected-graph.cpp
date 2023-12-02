@@ -4,21 +4,34 @@ using namespace std;
 
 // } Driver Code Ends
 class Solution {
+private:
+   bool detect(int node,vector<int>adj[],int vis[]){
+       vis[node]=1;
+       queue<pair<int,int>>q;
+       q.push({node,-1});
+       while(!q.empty()){
+           int node=q.front().first;
+           int parent=q.front().second;
+           q.pop();
+           for(auto it:adj[node]){
+               if(!vis[it]){
+                   vis[it]=1;
+                   q.push({it,node});
+               }
+               else if(it!=parent){
+                   return true;
+               }
+           }
+       }
+       return false;
+   }
   public:
-    bool detect(int src,vector<int>adj[],vector<int> &vis){
-        vis[src]=1;
-        queue<pair<int,int>>q;
-        q.push({src,-1});
-        while(!q.empty()){
-            int node=q.front().first;
-            int parent=q.front().second;
-            q.pop();
-            for(auto i:adj[node]){
-                if (!vis[i]){
-                    vis[i]=1;
-                    q.push({i,node});
-                }
-                else if(parent!=i){
+    // Function to detect cycle in an undirected graph.
+    bool isCycle(int V, vector<int> adj[]) {
+        int vis[V]={0};
+        for(int i=0;i<V;i++){
+            if(!vis[i]){
+                if(detect(i,adj,vis)==true){
                     return true;
                 }
             }
@@ -26,20 +39,6 @@ class Solution {
         }
         return false;
         
-    }
-    // Function to detect cycle in an undirected graph.
-    bool isCycle(int V, vector<int> adj[]) {
-        vector<int>vis(V,0);
-        for(int i=0;i<V;i++){
-            if (!vis[i]){
-                bool k=detect(i,adj,vis);
-                if(k){
-                    return true;
-                }
-            }
-        }
-        return false;
-    
         // Code here
     }
 };
